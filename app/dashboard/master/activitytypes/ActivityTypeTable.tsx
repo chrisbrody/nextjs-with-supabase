@@ -1,8 +1,8 @@
 import React from 'react';
-import { ActivityTypes } from '../../types/activitytypes'; // Import the ActivityTypes interface
+import { ActivityTypes } from '../../types/activitytypes';
 
 interface ActivityTypesTableProps {
-    activityTypes: ActivityTypes[]; // Use activityTypes instead of designers
+    activityTypes: ActivityTypes[];
 }
 
 const ActivityTypesTable: React.FC<ActivityTypesTableProps> = ({ activityTypes }) => { // Rename the component
@@ -48,4 +48,4 @@ const ActivityTypesTable: React.FC<ActivityTypesTableProps> = ({ activityTypes }
     );
 };
 
-export default ActivityTypesTable; // Export the correct component name
+export default ActivityTypesTable;
