@@ -13,22 +13,20 @@ export default async function DesignersPage() {
         return redirect("/sign-in");
     }
 
-
     let { data: designers, error } = await supabase
         .from('designers')
-        .select('*')
+        .select('*');
 
     if (error) {
         console.error("Error fetching designers:", error);
-        return <p>Error loading designers.</p>; // Handle the error gracefully
+        return <p>Error loading designers.</p>;
     }
-
-    console.log(designers)
+    const typedDesigners: Designer[] = designers as Designer[];
 
     return (
         <div>
             designers page
-            <DesignerTable designers={designers} />
+            <DesignerTable designers={typedDesigners} />
         </div>
     );
 }

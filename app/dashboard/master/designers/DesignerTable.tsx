@@ -1,21 +1,18 @@
 import React from 'react';
 
-// Define the type for a single designer object
 interface Designer {
     id: string;
     name: string;
     email: string;
     rate: number;
-    // Add other properties as needed (e.g., created_at)
-    created_at?: string; // Optional property
+    created_at?: string;
 }
 
-// Define the type for the designers prop (an array of Designer objects)
 interface DesignerTableProps {
     designers: Designer[];
 }
 
-const DesignerTable: React.FC<DesignerTableProps> = ({ designers }) => {  // Use React.FC and DesignerTableProps
+const DesignerTable: React.FC<DesignerTableProps> = ({ designers }) => {
     if (!designers || designers.length === 0) {
         return <p className="text-gray-600">No designers found.</p>;
     }
