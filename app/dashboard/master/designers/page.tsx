@@ -20,6 +20,7 @@ export default async function DesignersPage() {
               {JSON.stringify(user, null, 2)}
             </pre>
             </div>
+            testing
             <h1>Designers</h1>
             <p>This is the designers page.</p>
         </div>
