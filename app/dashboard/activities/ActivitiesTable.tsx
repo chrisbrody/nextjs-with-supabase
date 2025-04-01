@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Activity } from '../../types/activity';
-import { createClient } from "@/utils/supabase/client"; // Import client-side Supabase client
+import { Activity } from '../types/activity';
+import { createClient } from "@/utils/supabase/client";
 
 interface ActivityTableProps {
     activities: Activity[];
