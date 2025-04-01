@@ -7,7 +7,7 @@ const DesignerTable = ({ designers }) => {
 
     return (
         <div className="overflow-x-auto"> {/* Enables horizontal scrolling on small screens */}
-            <h1>Eminent Interior Designers</h1>
+            <h1>Eminent Interior Designer List</h1>
             <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                 <tr>
