@@ -1,0 +1,48 @@
+CREATE TABLE designers (
+    id UUID PRIMARY KEY,
+    name TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    rate NUMERIC(10,2) CHECK (rate >= 0) NOT NULL,
+    created_at TIMESTAMP DEFAULT now(),
+    FOREIGN KEY (id) REFERENCES auth.users(id) ON DELETE CASCADE
+);
+
+INSERT INTO designers (id, name, email, rate)
+VALUES
+    ('id', 'name', 'email@eminentid.com', 175.00),
+
+eminentid123
+
+CREATE TABLE activity_types (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    billable BOOLEAN NOT NULL,
+    "order" INT NOT NULL CHECK ("order" >= 1), -- Ensures order starts at 1
+    name TEXT NOT NULL,
+    color TEXT CHECK (color ~ '^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$'), -- Ensures valid hex code
+    short_name TEXT NOT NULL
+);
+INSERT INTO activity_types (billable, "order", name, color, short_name)
+VALUES
+    (TRUE, 1, 'Design Time - Construction related', '#039BE5', 'Construction'),
+    (TRUE, 2, 'Drafting - Sketching, AutoCAD, Revit', '#E64E02', 'Drafting'),
+    (FALSE, 3, 'Design Time - Furnishing & Decor', '#F6C026', 'Furnishings'),
+    (FALSE, 4, 'Research', '#3F51B5', 'Office Time'),
+    (FALSE, 5, 'Personal Time Off (PTO)', '#616161', 'PTO');
+
+
+CREATE TABLE activities
+    id UUID PRIMARY KEY,
+    billable BOOLEAN NOT NULL,
+    billable_status VARCHAR(255) NOT NULL,
+    billable_rate DECIMAL(10, 2),
+    calendar_id VARCHAR(255) NOT NULL,
+    activity_type VARCHAR(255),
+    customer_ref_number VARCHAR(255),
+    date DATE NOT NULL,
+    description TEXT,
+    duration VARCHAR(255),
+    designer_id VARCHAR(255),
+    google_event_id VARCHAR(255) NOT NULL UNIQUE,
+    object VARCHAR(255),
+    unit VARCHAR(255)
+);
