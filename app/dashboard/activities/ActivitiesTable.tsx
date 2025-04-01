@@ -11,12 +11,11 @@ interface ActivityTableProps {
 interface ActivityType {
     id: string;
     name: string;
-    // Add other properties of ActivityType if needed
 }
 
 const ActivityTable: React.FC<ActivityTableProps> = ({ activities }) => {
     const [designerNames, setDesignerNames] = useState<{ [key: string]: string }>({});
-    const [activityTypeNames, setActivityTypeNames] = useState<{ [key: string]: string }>({}); // New state for activity type names
+    const [activityTypeNames, setActivityTypeNames] = useState<{ [key: string]: string }>({});
 
     useEffect(() => {
         const fetchDesignerAndActivityTypeNames = async () => {
@@ -32,7 +31,7 @@ const ActivityTable: React.FC<ActivityTableProps> = ({ activities }) => {
             const { data: designers, error: designerError } = await supabase
                 .from('designers')
                 .select('id, name')
-                .in('id', designerIdsArray); // Use the array
+                .in('id', designerIdsArray);
 
             if (designerError) {
                 console.error("Error fetching designers:", designerError);
@@ -41,8 +40,10 @@ const ActivityTable: React.FC<ActivityTableProps> = ({ activities }) => {
 
             const { data: activityTypes, error: activityTypeError } = await supabase
                 .from('activity_types')
-                .select('id, name')
+                .select('id, short_name')
                 .in('id', activityTypeIdsArray); // Use the array
+
+            console.log(activityTypes)
 
             if (activityTypeError) {
                 console.error("Error fetching activity types:", activityTypeError);
@@ -57,7 +58,7 @@ const ActivityTable: React.FC<ActivityTableProps> = ({ activities }) => {
 
             const activityTypeNamesMap: { [key: string]: string } = {};
             activityTypes.forEach(activityType => {
-                activityTypeNamesMap[activityType.id] = activityType.name;
+                activityTypeNamesMap[activityType.id] = activityType.short_name;
             });
             setActivityTypeNames(activityTypeNamesMap);
         };
