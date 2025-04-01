@@ -1,10 +1,9 @@
 import FetchDataSteps from "@/components/tutorial/fetch-data-steps";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import Link from 'next/link';
 import Menu from '@/components/menu'
 
-export default async function ProtectedPage() {
+export default async function DashboardPage() {
   const supabase = await createClient();
 
   const {

@@ -1,5 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
-import {redirect} from "next/navigation";
+import { redirect } from "next/navigation";
+import DesignerTable from './DesignerTable';
+import { Designer } from '../../types/designer'; // Import the Designer interface
 
 export default async function DesignersPage() {
     const supabase = await createClient();
@@ -12,17 +14,20 @@ export default async function DesignersPage() {
         return redirect("/sign-in");
     }
 
+    let { data: designers, error } = await supabase
+        .from('designers')
+        .select('*');
+
+    if (error) {
+        console.error("Error fetching designers:", error);
+        return <p>Error loading designers.</p>;
+    }
+    const typedDesigners: Designer[] = designers as Designer[];
+
     return (
         <div>
-            <div className="flex flex-col gap-2 items-start">
-                <h2 className="font-bold text-2xl mb-4">Your user details</h2>
-                <pre className="text-xs font-mono p-3 rounded border max-h-32 overflow-auto">
-              {JSON.stringify(user, null, 2)}
-            </pre>
-            </div>
-            testing
-            <h1>Designers</h1>
-            <p>This is the designers page.</p>
+            designers page
+            <DesignerTable designers={typedDesigners} />
         </div>
     );
 }
