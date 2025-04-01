@@ -1,12 +1,5 @@
 import React from 'react';
-
-interface Designer {
-    id: string;
-    name: string;
-    email: string;
-    rate: number;
-    created_at?: string;
-}
+import { Designer } from '../../types/designer'; // Import the Designer interface
 
 interface DesignerTableProps {
     designers: Designer[];
