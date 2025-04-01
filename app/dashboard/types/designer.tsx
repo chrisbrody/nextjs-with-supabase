@@ -3,5 +3,4 @@ export interface Designer {
     name: string;
     email: string;
     rate: number;
-    created_at?: string;
 }
