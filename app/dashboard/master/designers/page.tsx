@@ -1,6 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import {redirect} from "next/navigation";
-// import DesignerTable from './DesignerTable';
+import DesignerTable from './DesignerTable';
 
 export default async function DesignersPage() {
     const supabase = await createClient();
@@ -28,7 +28,7 @@ export default async function DesignersPage() {
     return (
         <div>
             designers page
-            {/*<DesignerTable designers={designers} />*/}
+            <DesignerTable designers={designers} />
         </div>
     );
 }
