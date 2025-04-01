@@ -1,12 +1,27 @@
 import React from 'react';
 
-const DesignerTable = ({ designers }) => {
+// Define the type for a single designer object
+interface Designer {
+    id: string;
+    name: string;
+    email: string;
+    rate: number;
+    // Add other properties as needed (e.g., created_at)
+    created_at?: string; // Optional property
+}
+
+// Define the type for the designers prop (an array of Designer objects)
+interface DesignerTableProps {
+    designers: Designer[];
+}
+
+const DesignerTable: React.FC<DesignerTableProps> = ({ designers }) => {  // Use React.FC and DesignerTableProps
     if (!designers || designers.length === 0) {
         return <p className="text-gray-600">No designers found.</p>;
     }
 
     return (
-        <div className="overflow-x-auto"> {/* Enables horizontal scrolling on small screens */}
+        <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                 <tr>
