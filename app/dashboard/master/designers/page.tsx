@@ -13,15 +13,6 @@ export default async function DesignersPage() {
     }
 
 
-    let { data: designers, error } = await supabase
-        .from('designers')
-        .select('*')
-
-    if (error) {
-        console.error("Error fetching designers:", error);
-        return <p>Error loading designers.</p>; // Handle the error gracefully
-    }
-
     return (
         <div>
             designer page
