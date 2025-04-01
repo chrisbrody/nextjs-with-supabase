@@ -1,41 +1,71 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Activity } from '../types/activity';
-import { createClient } from "@/utils/supabase/client";
+import { Activity } from '../../types/activity';
+import { createClient } from "@/utils/supabase/client"; // Import client-side Supabase client
 
 interface ActivityTableProps {
     activities: Activity[];
 }
 
+interface ActivityType {
+    id: string;
+    name: string;
+    // Add other properties of ActivityType if needed
+}
+
 const ActivityTable: React.FC<ActivityTableProps> = ({ activities }) => {
-    const [designerNames, setDesignerNames] = useState<{[key: string]: string }>({});
+    const [designerNames, setDesignerNames] = useState<{ [key: string]: string }>({});
+    const [activityTypeNames, setActivityTypeNames] = useState<{ [key: string]: string }>({}); // New state for activity type names
 
     useEffect(() => {
-        const fetchDesignerNames = async () => {
+        const fetchDesignerAndActivityTypeNames = async () => {
             const supabase = createClient();
-            const designerId = [...new Set(activities.map(activity => activity.designer_id))]
-            const { data: designers, error } = await supabase
+
+            const designerIds = [...new Set(activities.map(activity => activity.designer_id))];
+            const activityTypeIds = [...new Set(activities.map(activity => activity.activity_type))]; // Get unique activity type IDs
+
+            // Convert Set to Array
+            const designerIdsArray = Array.from(designerIds);
+            const activityTypeIdsArray = Array.from(activityTypeIds);
+
+            const { data: designers, error: designerError } = await supabase
                 .from('designers')
                 .select('id, name')
-                .in('id', designerId);
+                .in('id', designerIdsArray); // Use the array
 
-            if(error) {
-                console.error("Error fetching designers:", error);
+            if (designerError) {
+                console.error("Error fetching designers:", designerError);
                 return;
             }
 
-            const names: { [key: string]: string } = {};
-            designers.forEach(designer => {
-                names[designer.id] = designer.name;
-            });
-            setDesignerNames(names);
-        }
+            const { data: activityTypes, error: activityTypeError } = await supabase
+                .from('activity_types')
+                .select('id, name')
+                .in('id', activityTypeIdsArray); // Use the array
 
-        if(activities && activities.length) {
-            fetchDesignerNames();
+            if (activityTypeError) {
+                console.error("Error fetching activity types:", activityTypeError);
+                return;
+            }
+
+            const designerNamesMap: { [key: string]: string } = {};
+            designers.forEach(designer => {
+                designerNamesMap[designer.id] = designer.name;
+            });
+            setDesignerNames(designerNamesMap);
+
+            const activityTypeNamesMap: { [key: string]: string } = {};
+            activityTypes.forEach(activityType => {
+                activityTypeNamesMap[activityType.id] = activityType.name;
+            });
+            setActivityTypeNames(activityTypeNamesMap);
+        };
+
+        if (activities && activities.length > 0) {
+            fetchDesignerAndActivityTypeNames();
         }
-    }, [activities])
+    }, [activities]);
 
     if (!activities || activities.length === 0) {
         return <p className="text-gray-600">No activities found.</p>;
@@ -50,10 +80,13 @@ const ActivityTable: React.FC<ActivityTableProps> = ({ activities }) => {
                         Date
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Activity Type
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Description
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Designer Name
+                        Designer
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Duration
@@ -72,9 +105,11 @@ const ActivityTable: React.FC<ActivityTableProps> = ({ activities }) => {
                 <tbody className="bg-white divide-y divide-gray-200">
                 {activities.map((activity) => {
                     const designerName = designerNames[activity.designer_id] || "Loading...";
+                    const activityTypeName = activityTypeNames[activity.activity_type] || "Loading..."; // Get activity type name
                     return (
                         <tr key={activity.id}>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{activity.date}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{activityTypeName}</td> {/* Display activity type name */}
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{activity.description}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{designerName}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{activity.duration} {activity.unit}</td>
@@ -82,7 +117,7 @@ const ActivityTable: React.FC<ActivityTableProps> = ({ activities }) => {
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{activity.billable_rate}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{activity.billable_status}</td>
                         </tr>
-                    )
+                    );
                 })}
                 </tbody>
             </table>
