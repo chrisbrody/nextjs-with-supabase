@@ -1,24 +1,34 @@
-import { createClient } from "@/utils/supabase/server";
+'use client';
+
+import { createClient } from "@/utils/supabase/client";
 import DesignerTable from './DesignerTable';
 import { Designer } from '../../types/designer';
+import React, { useState, useEffect } from 'react';
 
-export default async function DesignersPage() {
-    const supabase = await createClient();
+export default function DesignersPage() {
+    const [designers, setDesigners] = useState<Designer[]>([]);
 
-    let { data: designers, error } = await supabase
-        .from('designers')
-        .select('*');
+    useEffect(() => {
+        const fetchData = async () => {
+            const supabase = await createClient();
+            let { data: designersData, error } = await supabase
+                .from('designers')
+                .select('*');
 
-    if (error) {
-        console.error("Error fetching designers:", error);
-        return <p>Error loading designers.</p>;
-    }
-    const typedDesigners: Designer[] = designers as Designer[];
+            if (error) {
+                console.error("Error fetching designers:", error);
+                return;
+            }
+            setDesigners(designersData || []);
+        };
+
+        fetchData();
+    }, []);
 
     return (
         <div>
-            designers page
-            <DesignerTable designers={typedDesigners} />
+            <h1>Designers</h1>
+            <DesignerTable designers={designers} setDesigners={setDesigners} />
         </div>
     );
 }
